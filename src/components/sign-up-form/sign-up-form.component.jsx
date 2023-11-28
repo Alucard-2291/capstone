@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
   createAuthUserWithEmailAndPassword,
   createUserDocumentFromAuth,
 } from "../../utils/firebase/firebase.utils";
 import Button from "../button/button.component";
 import FormInput from "../form-input/form-input.component";
+import { UserContext } from "../../context/user.context";
 
-import './sign-up-form.styles.scss'
+import "./sign-up-form.styles.scss";
 
 const SignUpForm = () => {
   const defaultFormFields = {
@@ -17,6 +18,8 @@ const SignUpForm = () => {
   };
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { displayName, email, password, confirmPassword } = formFields;
+
+  const { setCurrentUser } = useContext(UserContext);
 
   const resetFormFields = () => {
     setFormFields(defaultFormFields);
@@ -38,6 +41,7 @@ const SignUpForm = () => {
         email,
         password
       );
+      setCurrentUser(user);
       await createUserDocumentFromAuth(user, { displayName });
       resetFormFields();
     } catch (error) {
@@ -54,7 +58,7 @@ const SignUpForm = () => {
       <span>Sign Up with Email and Password</span>
       <form onSubmit={handleSubmit}>
         <FormInput
-          label='Display Name'
+          label="Display Name"
           type="text"
           name="displayName"
           value={displayName}
@@ -63,7 +67,7 @@ const SignUpForm = () => {
         />
 
         <FormInput
-          label='Email'
+          label="Email"
           type="email"
           name="email"
           value={email}
@@ -72,7 +76,7 @@ const SignUpForm = () => {
         />
 
         <FormInput
-          label='Password'
+          label="Password"
           type="password"
           name="password"
           value={password}
@@ -81,7 +85,7 @@ const SignUpForm = () => {
         />
 
         <FormInput
-          label='Confirm Passsword'
+          label="Confirm Passsword"
           type="password"
           name="confirmPassword"
           value={confirmPassword}
